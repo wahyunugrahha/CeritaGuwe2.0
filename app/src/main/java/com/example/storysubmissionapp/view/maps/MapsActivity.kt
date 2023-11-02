@@ -22,6 +22,8 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
 import com.example.storysubmissionapp.data.Result
 import com.example.storysubmissionapp.data.model.Story
+import com.example.storysubmissionapp.data.model.UserModel
+import com.example.storysubmissionapp.view.main.MainViewModel
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -30,8 +32,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var loc: List<Story>
     private val boundsBuilder = LatLngBounds.Builder()
     private var theToast: Toast? = null
-
-    private val viewModel by viewModels<MapsViewModel> {
+    private val viewModel by viewModels<MainViewModel> {
         ViewModelFactory.getInstance(this)
     }
 
@@ -67,11 +68,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         setMapStyle()
-        getStories()
+        viewModel.getSessionData().observe(this) { user ->
+            getStories(user)
+        }
     }
 
-    private fun getStories() {
-        viewModel.stories().observe(this) { result ->
+    private fun getStories(user: UserModel) {
+        viewModel.getStories(user.token).observe(this) { result ->
             if (result != null) {
                 when (result) {
                     is Result.Loading -> {

@@ -66,7 +66,7 @@ class StoryRepository(
         liveData {
             emit(Result.Loading)
             try {
-                val response = apiService.getStories("Bearer $token")
+                val response = apiService.getStories("Bearer $token", 1, 50, 1)
                 if (response.error) {
                     emit(Result.Error("Stories Error: ${response.message}"))
                     Log.d("Stories Error", response.message)
