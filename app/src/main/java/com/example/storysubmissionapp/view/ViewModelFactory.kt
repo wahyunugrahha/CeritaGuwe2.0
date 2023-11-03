@@ -3,11 +3,12 @@ package com.example.storysubmissionapp.view
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.storysubmissionapp.data.StoryRepository
+import com.example.storysubmissionapp.data.local.repository.StoryRepository
 import com.example.storysubmissionapp.di.Injection
 import com.example.storysubmissionapp.view.detail.DetailViewModel
 import com.example.storysubmissionapp.view.login.LoginViewModel
 import com.example.storysubmissionapp.view.main.MainViewModel
+import com.example.storysubmissionapp.view.maps.MapsViewModel
 import com.example.storysubmissionapp.view.signup.SignupViewModel
 import com.example.storysubmissionapp.view.upload.UploadViewModel
 
@@ -26,6 +27,8 @@ class ViewModelFactory(private val storyRepository: StoryRepository) :
             return UploadViewModel(storyRepository) as T
         } else if (modelClass.isAssignableFrom(DetailViewModel::class.java)) {
             return DetailViewModel(storyRepository) as T
+        } else if (modelClass.isAssignableFrom(MapsViewModel::class.java)) {
+            return MapsViewModel(storyRepository) as T
         }
         throw UnsupportedOperationException("Unknown ViewModel class: " + modelClass.name)
     }

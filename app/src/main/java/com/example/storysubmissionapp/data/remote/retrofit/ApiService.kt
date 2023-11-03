@@ -1,9 +1,9 @@
-package com.example.storysubmissionapp.data.retrofit
+package com.example.storysubmissionapp.data.remote.retrofit
 
-import com.example.storysubmissionapp.data.response.LoginResponse
-import com.example.storysubmissionapp.data.response.MessageResponse
-import com.example.storysubmissionapp.data.response.StoriesResponse
-import com.example.storysubmissionapp.data.response.StoryResponse
+import com.example.storysubmissionapp.data.remote.response.LoginResponse
+import com.example.storysubmissionapp.data.remote.response.MessageResponse
+import com.example.storysubmissionapp.data.remote.response.StoriesResponse
+import com.example.storysubmissionapp.data.remote.response.StoryResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.http.Field
@@ -35,7 +35,7 @@ interface ApiService {
 
     @GET("stories")
     suspend fun getStories(
-        @Header("Authorization") token: String,
+        @Header("Authorization") token: String? = null,
         @Query("page") page: Int? = null,
         @Query("size") size: Int? = null,
         @Query("location") location: Int = 0

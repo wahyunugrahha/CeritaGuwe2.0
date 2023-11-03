@@ -35,4 +35,5 @@
     <string name="gettingData">Getting Data</string>
     <string name="successLoc">Succes Getting Data</string>
     <string name="close">Close</string>
+    <string name="retry">Retry</string>
 </resources>

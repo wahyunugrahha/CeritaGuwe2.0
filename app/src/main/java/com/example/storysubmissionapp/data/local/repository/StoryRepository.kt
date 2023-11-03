@@ -1,21 +1,31 @@
-package com.example.storysubmissionapp.data
+package com.example.storysubmissionapp.data.local.repository
 
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
+import androidx.paging.ExperimentalPagingApi
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.liveData
+import com.example.storysubmissionapp.data.Result
+import com.example.storysubmissionapp.data.StoryRemoteMediator
+import com.example.storysubmissionapp.data.local.database.StoryDatabase
+import com.example.storysubmissionapp.data.local.pref.UserPreferences
+import com.example.storysubmissionapp.data.model.Story
 import com.example.storysubmissionapp.data.model.UserModel
-import com.example.storysubmissionapp.data.pref.UserPreferences
-import com.example.storysubmissionapp.data.response.LoginResponse
-import com.example.storysubmissionapp.data.response.MessageResponse
-import com.example.storysubmissionapp.data.response.StoriesResponse
-import com.example.storysubmissionapp.data.response.StoryResponse
-import com.example.storysubmissionapp.data.retrofit.ApiService
+import com.example.storysubmissionapp.data.remote.response.LoginResponse
+import com.example.storysubmissionapp.data.remote.response.MessageResponse
+import com.example.storysubmissionapp.data.remote.response.StoriesResponse
+import com.example.storysubmissionapp.data.remote.response.StoryResponse
+import com.example.storysubmissionapp.data.remote.retrofit.ApiService
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 
 class StoryRepository(
     private val apiService: ApiService,
-    private val pref: UserPreferences
+    private val pref: UserPreferences,
+    private val storyDatabase: StoryDatabase
 ) {
     fun uploadImage(
         token: String,
@@ -60,13 +70,26 @@ class StoryRepository(
             }
         }
 
-    fun getStories(
+    @OptIn(ExperimentalPagingApi::class)
+    fun getStories(token: String): LiveData<PagingData<Story>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 5
+            ),
+            remoteMediator = StoryRemoteMediator(storyDatabase, apiService, token),
+            pagingSourceFactory = {
+                storyDatabase.storyDao().getAllStory()
+            }
+        ).liveData
+    }
+
+    fun getStoriesLocation(
         token: String
     ): LiveData<Result<StoriesResponse>> =
         liveData {
             emit(Result.Loading)
             try {
-                val response = apiService.getStories("Bearer $token", 1, 50, 1)
+                val response = apiService.getStories("Bearer $token", 1, 75, 1)
                 if (response.error) {
                     emit(Result.Error("Stories Error: ${response.message}"))
                     Log.d("Stories Error", response.message)
@@ -141,9 +164,13 @@ class StoryRepository(
 
     companion object {
         private var instance: StoryRepository? = null
-        fun getInstance(apiService: ApiService, pref: UserPreferences): StoryRepository =
+        fun getInstance(
+            apiService: ApiService,
+            pref: UserPreferences,
+            storyDatabase: StoryDatabase
+        ): StoryRepository =
             instance ?: synchronized(this) {
-                instance ?: StoryRepository(apiService, pref)
+                instance ?: StoryRepository(apiService, pref, storyDatabase)
             }.also { instance = it }
     }
 }

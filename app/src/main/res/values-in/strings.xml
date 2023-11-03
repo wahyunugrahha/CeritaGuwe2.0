@@ -35,4 +35,5 @@
     <string name="gettingData">Mengambil Data</string>
     <string name="successLoc">Berhasil Mengambil Data</string>
     <string name="close">Tutup</string>
+    <string name="retry">Retry</string>
 </resources>

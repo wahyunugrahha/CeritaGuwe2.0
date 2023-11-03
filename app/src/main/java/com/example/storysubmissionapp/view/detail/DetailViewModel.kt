@@ -2,7 +2,7 @@ package com.example.storysubmissionapp.view.detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
-import com.example.storysubmissionapp.data.StoryRepository
+import com.example.storysubmissionapp.data.local.repository.StoryRepository
 
 
 class DetailViewModel(private val mStoryRepository: StoryRepository) : ViewModel() {

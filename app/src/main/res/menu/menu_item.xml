@@ -7,7 +7,7 @@
         android:menuCategory="container">
         <item
             android:id="@+id/maps"
-            android:icon="@drawable/baseline_settings_24"
+            android:icon="@drawable/baseline_map_24"
             android:title="@string/setting"
             app:showAsAction="ifRoom"
             tools:targetApi="o" />

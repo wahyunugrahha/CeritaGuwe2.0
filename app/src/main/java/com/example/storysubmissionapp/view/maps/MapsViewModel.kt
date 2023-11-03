@@ -3,7 +3,7 @@ package com.example.storysubmissionapp.view.maps
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
-import com.example.storysubmissionapp.data.StoryRepository
+import com.example.storysubmissionapp.data.local.repository.StoryRepository
 import com.example.storysubmissionapp.data.model.UserModel
 
 class MapsViewModel(private val mStoryRepository: StoryRepository) : ViewModel() {
@@ -11,5 +11,5 @@ class MapsViewModel(private val mStoryRepository: StoryRepository) : ViewModel()
         mStoryRepository.getSession().asLiveData()
 
     fun getStories(token: String) =
-        mStoryRepository.getStories(token)
+        mStoryRepository.getStoriesLocation(token)
 }

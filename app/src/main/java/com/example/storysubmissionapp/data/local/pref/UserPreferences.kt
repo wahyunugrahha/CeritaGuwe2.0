@@ -1,4 +1,4 @@
-package com.example.storysubmissionapp.data.pref
+package com.example.storysubmissionapp.data.local.pref
 
 import android.content.Context
 import androidx.datastore.core.DataStore

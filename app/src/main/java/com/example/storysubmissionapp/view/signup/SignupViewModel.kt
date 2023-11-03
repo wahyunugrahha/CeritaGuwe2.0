@@ -1,7 +1,7 @@
 package com.example.storysubmissionapp.view.signup
 
 import androidx.lifecycle.ViewModel
-import com.example.storysubmissionapp.data.StoryRepository
+import com.example.storysubmissionapp.data.local.repository.StoryRepository
 
 
 class SignupViewModel(private val mStoryRepository: StoryRepository) : ViewModel() {

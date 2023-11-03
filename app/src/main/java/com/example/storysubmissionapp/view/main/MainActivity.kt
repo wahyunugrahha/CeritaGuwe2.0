@@ -5,23 +5,19 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.storysubmissionapp.R
-import com.example.storysubmissionapp.data.model.UserModel
-import com.example.storysubmissionapp.data.showToast
 import com.example.storysubmissionapp.databinding.ActivityMainBinding
 import com.example.storysubmissionapp.view.ViewModelFactory
+import com.example.storysubmissionapp.view.adapter.LoadingStateAdapter
 import com.example.storysubmissionapp.view.adapter.StoryAdapter
+import com.example.storysubmissionapp.view.maps.MapsActivity
 import com.example.storysubmissionapp.view.upload.UploadActivity
 import com.example.storysubmissionapp.view.welcome.WelcomeActivity
 import kotlinx.coroutines.launch
-import com.example.storysubmissionapp.data.Result
-import com.example.storysubmissionapp.view.maps.MapsActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -46,43 +42,23 @@ class MainActivity : AppCompatActivity() {
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
             } else {
-                loadStories(user)
+                loadStories(user.token)
             }
         }
     }
 
-    private fun loadStories(user: UserModel) {
-        viewModel.getStories(user.token).observe(this) { result ->
-            if (result != null) {
-                when (result) {
-                    is Result.Loading -> {
-                        showLoading(true)
-                        binding.progressBar.isVisible = true
-                    }
-
-                    is Result.Error -> {
-                        showLoading(false)
-                        showToast(result.error)
-                        binding.apply {
-                            binding.progressBar.isVisible = false
-                        }
-                    }
-
-                    is Result.Success -> {
-                        showLoading(false)
-                        binding.progressBar.isVisible = false
-                        val layoutManager = LinearLayoutManager(this)
-                        binding.rvStory.layoutManager = layoutManager
-                        binding.rvStory.adapter = StoryAdapter(result.data.listStory)
-                    }
+    private fun loadStories(token: String) {
+        viewModel.stories(token).observe(this) {
+            val adapter = StoryAdapter()
+            binding.rvStory.layoutManager =
+                LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+            binding.rvStory.adapter = adapter.withLoadStateFooter(
+                footer = LoadingStateAdapter {
+                    adapter.retry()
                 }
-            }
+            )
+            adapter.submitData(lifecycle, it)
         }
-    }
-
-    private fun showLoading(state: Boolean) {
-        if (state) binding.progressBar.visibility = View.VISIBLE
-        else binding.progressBar.visibility = View.GONE
     }
 
     override fun onDestroy() {

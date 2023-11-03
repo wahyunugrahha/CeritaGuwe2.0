@@ -3,7 +3,7 @@ package com.example.storysubmissionapp.view.upload
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
-import com.example.storysubmissionapp.data.StoryRepository
+import com.example.storysubmissionapp.data.local.repository.StoryRepository
 import com.example.storysubmissionapp.data.model.UserModel
 import okhttp3.MultipartBody
 import okhttp3.RequestBody

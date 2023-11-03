@@ -8,6 +8,9 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.storysubmissionapp.R
+import com.example.storysubmissionapp.data.Result
+import com.example.storysubmissionapp.data.model.Story
+import com.example.storysubmissionapp.data.model.UserModel
 import com.example.storysubmissionapp.databinding.ActivityMapsBinding
 import com.example.storysubmissionapp.view.ViewModelFactory
 import com.example.storysubmissionapp.view.detail.DetailActivity
@@ -20,10 +23,6 @@ import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
-import com.example.storysubmissionapp.data.Result
-import com.example.storysubmissionapp.data.model.Story
-import com.example.storysubmissionapp.data.model.UserModel
-import com.example.storysubmissionapp.view.main.MainViewModel
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -32,7 +31,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var loc: List<Story>
     private val boundsBuilder = LatLngBounds.Builder()
     private var theToast: Toast? = null
-    private val viewModel by viewModels<MainViewModel> {
+    private val viewModel by viewModels<MapsViewModel> {
         ViewModelFactory.getInstance(this)
     }
 
@@ -90,6 +89,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     is Result.Error -> {
                         showSnackBar(result.error)
                     }
+
                 }
 
             }

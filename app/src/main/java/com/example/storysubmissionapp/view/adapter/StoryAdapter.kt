@@ -7,39 +7,28 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.util.Pair
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.storysubmissionapp.data.loadImage
 import com.example.storysubmissionapp.data.model.Story
 import com.example.storysubmissionapp.databinding.ListItemBinding
 import com.example.storysubmissionapp.view.detail.DetailActivity
 
-class StoryAdapter(
-    private val dataset: List<Story>,
-) : RecyclerView.Adapter<StoryAdapter.StoryViewHolder>() {
+class StoryAdapter : PagingDataAdapter<Story, StoryAdapter.StoryViewHolder>(
+    DIFF_CALLBACK
+) {
 
     inner class StoryViewHolder(
-        val binding: ListItemBinding
-    ) : RecyclerView.ViewHolder(binding.root)
+        private val binding: ListItemBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(story: Story) {
+            binding.apply {
+                tvItemName.text = story.name
+                tvItemDescription.text = story.description
+                ivAvatar.loadImage(itemView.context, story.photoUrl)
+            }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StoryViewHolder {
-        val binding = ListItemBinding.inflate(
-            LayoutInflater.from(parent.context), parent, false
-        )
-        return StoryViewHolder(binding)
-    }
-
-    override fun getItemCount(): Int = dataset.size
-
-    override fun onBindViewHolder(holder: StoryViewHolder, position: Int) {
-        val story = dataset[position]
-
-        holder.binding.apply {
-            tvItemName.text = story.name
-            tvItemDescription.text = story.description
-            ivAvatar.loadImage(holder.itemView.context, story.photoUrl)
-        }
-
-        holder.apply {
             itemView.setOnClickListener {
                 val intent = Intent(itemView.context, DetailActivity::class.java)
                 intent.putExtra(DetailActivity.ID_KEY, story.id)
@@ -53,6 +42,33 @@ class StoryAdapter(
                     )
 
                 itemView.context.startActivity(intent, optionsCompat.toBundle())
+            }
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StoryViewHolder {
+        val binding = ListItemBinding.inflate(
+            LayoutInflater.from(parent.context), parent, false
+        )
+        return StoryViewHolder(binding)
+    }
+
+
+    override fun onBindViewHolder(holder: StoryViewHolder, position: Int) {
+        getItem(position)?.let { holder.bind(it) }
+    }
+
+    companion object {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Story>() {
+            override fun areItemsTheSame(oldItem: Story, newItem: Story): Boolean {
+                return oldItem == newItem
+            }
+
+            override fun areContentsTheSame(
+                oldItem: Story,
+                newItem: Story
+            ): Boolean {
+                return oldItem.id == newItem.id
             }
         }
     }

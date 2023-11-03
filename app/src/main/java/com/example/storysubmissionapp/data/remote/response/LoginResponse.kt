@@ -1,4 +1,4 @@
-package com.example.storysubmissionapp.data.response
+package com.example.storysubmissionapp.data.remote.response
 
 data class LoginResponse(
     val error: Boolean,
