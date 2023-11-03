@@ -36,4 +36,7 @@
     <string name="successLoc">Succes Getting Data</string>
     <string name="close">Close</string>
     <string name="retry">Retry</string>
+    <string name="include_currect_location">Include Current Location</string>
+    <string name="previewimage">PreviewImage</string>
+    <string name="error">Error: %1$s</string>
 </resources>

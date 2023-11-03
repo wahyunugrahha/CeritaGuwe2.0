@@ -4,11 +4,11 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import com.example.storysubmissionapp.data.loadImage
+import com.example.storysubmissionapp.utils.loadImage
 import com.example.storysubmissionapp.databinding.ActivityDetailBinding
 import com.example.storysubmissionapp.view.ViewModelFactory
 import com.example.storysubmissionapp.data.Result
-import com.example.storysubmissionapp.data.showToast
+import com.example.storysubmissionapp.utils.showToast
 
 
 class DetailActivity : AppCompatActivity() {

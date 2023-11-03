@@ -16,7 +16,8 @@
         android:layout_marginBottom="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/previewimage" />
 
     <Button
         android:id="@+id/cameraButton"
@@ -47,6 +48,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/cameraButton" />
 
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textField"
         android:layout_width="match_parent"
@@ -68,20 +70,29 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+
+    <CheckBox
+        android:id="@+id/cb_loc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/include_currect_location"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textField" />
+
     <Button
         android:id="@+id/uploadButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
         android:backgroundTint="@color/black"
         android:text="@string/upload"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textField" />
-
+        app:layout_constraintTop_toBottomOf="@+id/cb_loc" />
 
     <ProgressBar
         android:id="@+id/progressBar"

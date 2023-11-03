@@ -10,15 +10,14 @@ import androidx.core.util.Pair
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.example.storysubmissionapp.data.loadImage
 import com.example.storysubmissionapp.data.model.Story
 import com.example.storysubmissionapp.databinding.ListItemBinding
+import com.example.storysubmissionapp.utils.loadImage
 import com.example.storysubmissionapp.view.detail.DetailActivity
 
 class StoryAdapter : PagingDataAdapter<Story, StoryAdapter.StoryViewHolder>(
     DIFF_CALLBACK
 ) {
-
     inner class StoryViewHolder(
         private val binding: ListItemBinding
     ) : RecyclerView.ViewHolder(binding.root) {
@@ -59,7 +58,7 @@ class StoryAdapter : PagingDataAdapter<Story, StoryAdapter.StoryViewHolder>(
     }
 
     companion object {
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Story>() {
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Story>() {
             override fun areItemsTheSame(oldItem: Story, newItem: Story): Boolean {
                 return oldItem == newItem
             }

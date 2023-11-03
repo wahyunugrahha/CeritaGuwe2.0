@@ -9,12 +9,15 @@ import com.example.storysubmissionapp.data.model.Story
 
 @Dao
 interface StoryDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertStory(quote: List<Story>)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insertStory(story: Story)
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insertStories(stories: List<Story>)
 
     @Query("SELECT * FROM story")
     fun getAllStory(): PagingSource<Int, Story>
 
     @Query("DELETE FROM story")
-    suspend fun deleteAll()
+    fun deleteAllStory()
 }

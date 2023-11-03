@@ -19,6 +19,7 @@
             android:id="@+id/ivAvatar"
             android:layout_width="match_parent"
             android:layout_height="200dp"
+            android:contentDescription="@string/previewimage"
             android:scaleType="centerCrop"
             android:transitionName="profile"
             tools:srcCompat="@tools:sample/avatars" />

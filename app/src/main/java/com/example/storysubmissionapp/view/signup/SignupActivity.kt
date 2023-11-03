@@ -12,14 +12,14 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.example.storysubmissionapp.R
-import com.example.storysubmissionapp.data.ValidateType
-import com.example.storysubmissionapp.data.validate
+import com.example.storysubmissionapp.utils.ValidateType
+import com.example.storysubmissionapp.utils.validate
 import com.example.storysubmissionapp.databinding.ActivitySignupBinding
 import com.example.storysubmissionapp.view.ViewModelFactory
 import com.example.storysubmissionapp.view.login.LoginActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.example.storysubmissionapp.data.Result
-import com.example.storysubmissionapp.data.showToast
+import com.example.storysubmissionapp.utils.showToast
 
 
 class SignupActivity : AppCompatActivity() {

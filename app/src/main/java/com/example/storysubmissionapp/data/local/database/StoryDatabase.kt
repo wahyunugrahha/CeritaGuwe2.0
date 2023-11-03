@@ -6,29 +6,28 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.storysubmissionapp.data.model.Story
 
-@Database(
-    entities = [Story::class, RemoteKeys::class],
-    version = 2,
-    exportSchema = false
-)
+
+@Database(entities = [Story::class, RemoteKeys::class], version = 1, exportSchema = false)
 abstract class StoryDatabase : RoomDatabase() {
+
     abstract fun storyDao(): StoryDao
     abstract fun remoteKeysDao(): RemoteKeysDao
 
     companion object {
         @Volatile
-        private var INSTANCE: StoryDatabase? = null
+        private var database: StoryDatabase? = null
 
         @JvmStatic
         fun getDatabase(context: Context): StoryDatabase {
-            return INSTANCE ?: synchronized(this) {
-                INSTANCE ?: Room.databaseBuilder(
+            return database ?: synchronized(this) {
+                database ?: Room.databaseBuilder(
                     context.applicationContext,
-                    StoryDatabase::class.java, "story_database"
+                    StoryDatabase::class.java,
+                    "story_db"
                 )
                     .fallbackToDestructiveMigration()
                     .build()
-                    .also { INSTANCE = it }
+                    .also { database = it }
             }
         }
     }

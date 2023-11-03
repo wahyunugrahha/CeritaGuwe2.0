@@ -1,4 +1,4 @@
-package com.example.storysubmissionapp.data
+package com.example.storysubmissionapp.utils
 
 import android.content.ContentValues
 import android.content.Context

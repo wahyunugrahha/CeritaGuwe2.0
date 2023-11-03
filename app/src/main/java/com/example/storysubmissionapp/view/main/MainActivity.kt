@@ -8,15 +8,18 @@ import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.paging.LoadState
 import com.example.storysubmissionapp.R
+import com.example.storysubmissionapp.data.model.UserModel
 import com.example.storysubmissionapp.databinding.ActivityMainBinding
+import com.example.storysubmissionapp.utils.showToast
 import com.example.storysubmissionapp.view.ViewModelFactory
 import com.example.storysubmissionapp.view.adapter.LoadingStateAdapter
 import com.example.storysubmissionapp.view.adapter.StoryAdapter
 import com.example.storysubmissionapp.view.maps.MapsActivity
 import com.example.storysubmissionapp.view.upload.UploadActivity
 import com.example.storysubmissionapp.view.welcome.WelcomeActivity
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
@@ -25,6 +28,7 @@ class MainActivity : AppCompatActivity() {
         ViewModelFactory.getInstance(this)
     }
     private lateinit var binding: ActivityMainBinding
+    private val adapter = StoryAdapter()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,22 +46,42 @@ class MainActivity : AppCompatActivity() {
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
             } else {
-                loadStories(user.token)
+                loadStories(user)
             }
         }
     }
 
-    private fun loadStories(token: String) {
-        viewModel.stories(token).observe(this) {
-            val adapter = StoryAdapter()
-            binding.rvStory.layoutManager =
-                LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-            binding.rvStory.adapter = adapter.withLoadStateFooter(
-                footer = LoadingStateAdapter {
-                    adapter.retry()
-                }
-            )
+    private fun loadStories(user: UserModel) {
+        binding.rvStory.adapter = adapter.withLoadStateFooter(
+            LoadingStateAdapter {
+                adapter.retry()
+            }
+        )
+
+        viewModel.stories(user.token).observe(this) {
             adapter.submitData(lifecycle, it)
+
+        }
+
+        lifecycleScope.launch {
+            adapter.loadStateFlow.collectLatest { loadStates ->
+                when (loadStates.refresh) {
+                    is LoadState.NotLoading -> {
+
+                    }
+
+                    is LoadState.Error -> {
+                        showToast(
+                            getString(
+                                R.string.error,
+                                (loadStates.refresh as LoadState.Error).error.message.toString()
+                            )
+                        )
+                    }
+
+                    else -> Unit
+                }
+            }
         }
     }
 

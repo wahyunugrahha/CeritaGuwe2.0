@@ -19,8 +19,10 @@ import com.example.storysubmissionapp.data.remote.response.MessageResponse
 import com.example.storysubmissionapp.data.remote.response.StoriesResponse
 import com.example.storysubmissionapp.data.remote.response.StoryResponse
 import com.example.storysubmissionapp.data.remote.retrofit.ApiService
+import com.example.storysubmissionapp.utils.wrapEspressoIdlingResource
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+
 
 class StoryRepository(
     private val apiService: ApiService,
@@ -30,12 +32,15 @@ class StoryRepository(
     fun uploadImage(
         token: String,
         imageUri: MultipartBody.Part,
-        description: RequestBody
+        description: RequestBody,
+        lat: RequestBody?,
+        lon: RequestBody?,
     ): LiveData<Result<MessageResponse>> =
         liveData {
             emit(Result.Loading)
             try {
-                val response = apiService.uploadStory("bearer $token", imageUri, description)
+                val response =
+                    apiService.uploadStory("bearer $token", imageUri, description, lat, lon)
                 if (response.error) {
                     emit(Result.Error("Upload Error: ${response.message}"))
                     Log.d("Upload Error", response.message)
@@ -71,7 +76,9 @@ class StoryRepository(
         }
 
     @OptIn(ExperimentalPagingApi::class)
-    fun getStories(token: String): LiveData<PagingData<Story>> {
+    fun getStories(
+        token: String
+    ): LiveData<PagingData<Story>> {
         return Pager(
             config = PagingConfig(
                 pageSize = 5
@@ -136,31 +143,32 @@ class StoryRepository(
         password: String
     ): LiveData<Result<LoginResponse>> =
         liveData {
-            emit(Result.Loading)
-            try {
-                val response = apiService.login(email, password)
-                if (response.error) {
-                    Log.d("Login Error", response.message)
-                    emit(Result.Error("Login Error: ${response.message}"))
-                } else {
-                    Log.d("Login Success", response.message)
-                    emit(Result.Success(response))
+            wrapEspressoIdlingResource {
+                emit(Result.Loading)
+                try {
+                    val response = apiService.login(email, password)
+                    if (response.error) {
+                        Log.d("Login Error", response.message)
+                        emit(Result.Error("Login Error: ${response.message}"))
+                    } else {
+                        Log.d("Login Success", response.message)
+                        emit(Result.Success(response))
 
-                    pref.saveSession(
-                        UserModel(
-                            response.loginResult.userId,
-                            response.loginResult.name,
-                            response.loginResult.token,
-                            true
+                        pref.saveSession(
+                            UserModel(
+                                response.loginResult.userId,
+                                response.loginResult.name,
+                                response.loginResult.token,
+                                true
+                            )
                         )
-                    )
+                    }
+                } catch (e: Exception) {
+                    Log.d("Login Exception", e.message.toString())
+                    emit(Result.Error("Error : ${e.message.toString()}"))
                 }
-            } catch (e: Exception) {
-                Log.d("Login Exception", e.message.toString())
-                emit(Result.Error("Error : ${e.message.toString()}"))
             }
         }
-
 
     companion object {
         private var instance: StoryRepository? = null
