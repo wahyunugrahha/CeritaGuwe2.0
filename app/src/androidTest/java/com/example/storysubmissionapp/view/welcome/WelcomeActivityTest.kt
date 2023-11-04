@@ -17,12 +17,15 @@ import com.example.storysubmissionapp.view.main.MainActivity
 import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
+import org.junit.FixMethodOrder
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.junit.runners.MethodSorters
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class WelcomeActivityTest {
 
     private val dummyEmail = "testing@wahyu.com"
@@ -44,7 +47,7 @@ class WelcomeActivityTest {
     }
 
     @Test
-    fun fromWelcomeUntilLogin() {
+    fun login() {
         Thread.sleep(3000)
         //check if login button is displayed
         onView(withId(R.id.loginButton)).check(matches(isDisplayed()))
@@ -64,17 +67,19 @@ class WelcomeActivityTest {
 
         //check if already in MainActivity
         Intents.intended(hasComponent(MainActivity::class.java.name))
-
+        Thread.sleep(1000)
         //check if recyclerview is displayed
         onView(withId(R.id.rvStory)).check(matches(isDisplayed()))
+
     }
 
 
     @Test
-    fun fromMainUntilLogout() {
+    fun logout() {
+
         Thread.sleep(3000)
         Intents.intended(hasComponent(MainActivity::class.java.name))
-        onView(withText(R.string.logout)).perform(click())
+        onView(withId(R.string.logout)).perform(click())
         Intents.intended(hasComponent(WelcomeActivity::class.java.name))
     }
 
